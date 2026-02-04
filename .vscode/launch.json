@@ -1,0 +1,10 @@
+{
+  "configurations": [
+    {
+      "name": "C#: Gotham Paint Debug",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}/GothamPaint.csproj"
+    }
+  ]
+}
