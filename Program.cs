@@ -1,13 +1,41 @@
 ﻿using Raylib_cs;
+using Clay_cs;
+using GothamPaint;
 
-Raylib.InitWindow(800, 600, "Gotham Paint");
-Raylib.SetTargetFPS(60);
-
-while (!Raylib.WindowShouldClose())
+public class Program
 {
-  Raylib.BeginDrawing();
-  Raylib.ClearBackground(Raylib.GetColor(0x2C3E50FF));
-  Raylib.EndDrawing();
-}
+    public static unsafe void Main(string[] args)
+    {
+        Raylib.InitWindow(800, 600, "Gotham Paint");
+        Raylib.SetTargetFPS(60);
 
-Raylib.CloseWindow();
+        using var arena = Clay.CreateArena(Clay.MinMemorySize());
+        Clay.Initialize(arena, new Clay_Dimensions(Raylib.GetScreenWidth(), Raylib.GetScreenHeight()), ErrorHandler);
+        Clay.SetDebugModeEnabled(false);
+
+        Layout.InitializeText("");
+
+        while (!Raylib.WindowShouldClose())
+        {
+            Clay.SetLayoutDimensions(new Clay_Dimensions(Raylib.GetScreenWidth(), Raylib.GetScreenHeight()));
+            Clay.SetPointerState(Raylib.GetMousePosition(), Raylib.IsMouseButtonDown(0));
+            Clay.UpdateScrollContainers(true, Raylib.GetMouseWheelMoveV(), Raylib.GetFrameTime());
+
+            Clay.BeginLayout();
+            Layout.Sidebar();
+            var commands = Clay.EndLayout();
+
+            Raylib.BeginDrawing();
+            Raylib.ClearBackground(Raylib.GetColor(0x2C3E50FF));
+            RaylibClay.RenderCommands(commands);
+            Raylib.EndDrawing();
+        }
+
+        Raylib.CloseWindow();
+    }
+
+    private static void ErrorHandler(Clay_ErrorData data)
+    {
+        Console.WriteLine($"{data.errorType}: {data.errorText.ToCSharpString()}");
+    }
+}

@@ -5,9 +5,11 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Orcolom.Clay_cs" Version="0.4.0" />
     <PackageReference Include="Raylib-cs" Version="7.0.2" />
   </ItemGroup>
 
