@@ -14,6 +14,7 @@ public class Program
         Clay.SetDebugModeEnabled(false);
 
         Layout.InitializeText("");
+        Camera camera = new();
 
         while (!Raylib.WindowShouldClose())
         {
@@ -21,12 +22,19 @@ public class Program
             Clay.SetPointerState(Raylib.GetMousePosition(), Raylib.IsMouseButtonDown(0));
             Clay.UpdateScrollContainers(true, Raylib.GetMouseWheelMoveV(), Raylib.GetFrameTime());
 
+            camera.Move();
+
             Clay.BeginLayout();
             Layout.Sidebar();
             var commands = Clay.EndLayout();
 
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Raylib.GetColor(0x2C3E50FF));
+
+            camera.Begin();
+            Raylib.DrawRectangle(0, 0, 200, 200, Raylib.GetColor(0xECF0F1FF));
+            camera.End();
+
             RaylibClay.RenderCommands(commands);
             Raylib.EndDrawing();
         }
