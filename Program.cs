@@ -6,6 +6,7 @@ public class Program
 {
     public static unsafe void Main(string[] args)
     {
+        Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
         Raylib.InitWindow(800, 600, "Gotham Paint");
         Raylib.SetTargetFPS(60);
 
