@@ -9,12 +9,15 @@ public class Camera
     private Vector2 DragStart { get; set; }
     private Vector2 DragCurrent { get; set; }
 
-    public Camera()
+    public Camera(int canvasWidth, int canvasHeight)
     {
+        int screenWidth = Raylib.GetScreenWidth();
+        int screenHeight = Raylib.GetScreenHeight();
+
         rlCamera = new Camera2D
         {
-            Target = new Vector2(0, 0),
-            Offset = new Vector2(0, 0),
+            Target = Vector2.Zero,
+            Offset = new Vector2(screenWidth / 2 - canvasWidth / 2, screenHeight / 2 - canvasHeight / 2),
             Rotation = 0,
             Zoom = 1
         };
@@ -22,12 +25,12 @@ public class Camera
 
     public void Move()
     {
-        if (Raylib.IsMouseButtonPressed(MouseButton.Left))
+        if (Raylib.IsMouseButtonPressed(MouseButton.Right))
         {
             DragStart = Raylib.GetMousePosition();
         }
 
-        if (Raylib.IsMouseButtonDown(MouseButton.Left))
+        if (Raylib.IsMouseButtonDown(MouseButton.Right))
         {
             DragCurrent = Raylib.GetMousePosition();
             Vector2 delta = Vector2.Subtract(DragCurrent, DragStart);
@@ -45,4 +48,6 @@ public class Camera
     {
         Raylib.EndMode2D();
     }
+
+    public Vector2 WorldMousePosition() => Raylib.GetScreenToWorld2D(Raylib.GetMousePosition(), rlCamera);
 }
