@@ -3,6 +3,8 @@ using Raylib_cs;
 
 public static class Palettes
 {
+    public static int selectedIndex = 0;
+
     public static readonly Palette batmanPalette = new("Batman", [
         new(0, 0, 0),
         new(255, 255, 0),
@@ -23,4 +25,11 @@ public struct Palette(string name, Clay_Color[] colors)
 {
     public readonly string name = name;
     public readonly Clay_Color[] palette = colors;
+    public int selectedColor = 0;
+
+    public Color GetRaylibColor()
+    {
+        var clayColor = palette[selectedColor];
+        return new Color((byte) clayColor.r, (byte) clayColor.g, (byte) clayColor.b, (byte) clayColor.a);
+    }
 }

@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using System.Numerics;
+using Clay_cs;
 using Raylib_cs;
 
 namespace GothamPaint;
@@ -45,7 +47,8 @@ public class Canvas : IDisposable
             {
                 if (BrushSize == 1)
                 {
-                    Raylib.ImageDrawLineV(ref canvasImage, prevMousePos, mousePos, Color.Black);
+                    Palette selectedPalette = Palettes.palettes[Palettes.selectedIndex];
+                    Raylib.ImageDrawLineV(ref canvasImage, prevMousePos, mousePos, selectedPalette.GetRaylibColor());
                 }
                 else
                 {
@@ -85,7 +88,8 @@ public class Canvas : IDisposable
 
                 if (Raylib.CheckCollisionPointPoly(new Vector2(x, y), [start[0], start[1], end[1], end[0]]))
                 {
-                    Raylib.ImageDrawPixel(ref canvasImage, x, y, Color.Black);
+                    Palette selectedPalette = Palettes.palettes[Palettes.selectedIndex];
+                    Raylib.ImageDrawPixel(ref canvasImage, x, y, selectedPalette.GetRaylibColor());
                     currentArea++;
                 }
             }

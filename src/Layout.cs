@@ -1,5 +1,6 @@
 using Clay_cs;
 using Raylib_cs;
+using System.Reflection;
 using System.Security.AccessControl;
 
 namespace GothamPaint;
@@ -109,18 +110,26 @@ public static class Layout
                 }
             }))
             {
-                // 9, 31, 46 for selected pallete background when we implement that
-                foreach (Palette palette in Palettes.palettes)
+                for (int i = 0; i < Palettes.palettes.Length; i++)
                 {
+                    Palette palette = Palettes.palettes[i];
+                    int currentPaletteIndex = i;
                     using (Clay.Element(Clay.Id(palette.name), new()
                     {
-                        //backgroundColor = palette.palette[0],
-                        backgroundColor = new Clay_Color(10, 55, 73),
+                        backgroundColor = (i == Palettes.selectedIndex ? new Clay_Color(9, 31, 46) : new Clay_Color(10, 55, 73)),
                         layout = new()
                         {
                             sizing = new Clay_Sizing(Clay_SizingAxis.Grow(), Clay_SizingAxis.Fixed(sidebarWidth / 2)),
                         }
-                    })) { }
+                    })) {
+                        Clay.OnHover((id, pointer, userData) => 
+                        {
+                            if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_PRESSED_THIS_FRAME)
+                            {
+                                Palettes.selectedIndex = currentPaletteIndex;
+                            }
+                        });
+                    }
                 }
                 using (Clay.Element(Clay.Id("Filer"), new()
                 {
