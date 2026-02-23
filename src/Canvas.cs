@@ -16,9 +16,9 @@ public class Canvas : IDisposable
 
     public Canvas(int width, int height)
     {
-        Width = width;
+        Width = width; 
         Height = height;
-        canvasImage = Raylib.GenImageColor(Width, Height, Color.White);
+        canvasImage = Raylib.GenImageColor(Width, Height, new Color(88, 95, 97));
         canvasTexture = Raylib.LoadTextureFromImage(canvasImage);
         refreshTexture = true;
     }
@@ -64,6 +64,7 @@ public class Canvas : IDisposable
             }
         }
 
+        Raylib.DrawRectangle(-5, -5, Width + 10, Height + 10, new Color(36, 83, 97)); // border
         Raylib.DrawTexture(canvasTexture, 0, 0, Color.White);
     }
 

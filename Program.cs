@@ -1,6 +1,7 @@
 ﻿using Raylib_cs;
 using Clay_cs;
 using GothamPaint;
+using System.Numerics;
 
 public class Program
 {
@@ -38,7 +39,7 @@ public class Program
             var commands = Clay.EndLayout();
 
             Raylib.BeginDrawing();
-            Raylib.ClearBackground(Raylib.GetColor(0x2C3E50FF));
+            Raylib.ClearBackground(Raylib.GetColor(0x11151CFF));
 
             camera.Begin();
             canvas.Draw(camera.WorldMousePosition());
