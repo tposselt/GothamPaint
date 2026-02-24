@@ -88,8 +88,37 @@ public static class Layout
                     layout = new()
                     {
                         sizing = new Clay_Sizing(Clay_SizingAxis.Grow(), Clay_SizingAxis.Grow()),
+                        padding = Clay_Padding.All(10),
+                        layoutDirection = Clay_LayoutDirection.CLAY_LEFT_TO_RIGHT,
+                        childAlignment = new() { x = Clay_LayoutAlignmentX.CLAY_ALIGN_X_LEFT, y = Clay_LayoutAlignmentY.CLAY_ALIGN_Y_CENTER },
+                        childGap = 10,
                     }
-                })) { }
+                })) {
+                    Palette palette = Palettes.palettes[Palettes.selectedIndex];
+                    for (int i = 0; i < palette.palette.Length; i++)
+                    {
+                        Clay_Color color = palette.palette[i];
+                        int currentColorIndex = i;
+                        float modifier = (i == palette.selectedColor ? 1 : 0.8f);
+                        using (Clay.Element(Clay.Id(palette.name + currentColorIndex), new()
+                        {
+                            backgroundColor = color,
+                            layout = new()
+                            {
+                                sizing = new Clay_Sizing(Clay_SizingAxis.Fixed(toolButtonSize * modifier), Clay_SizingAxis.Fixed(toolButtonSize * modifier)),
+                            }
+                        }))
+                        {
+                            Clay.OnHover((id, pointer, userData) =>
+                            {
+                                if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_PRESSED_THIS_FRAME)
+                                {
+                                    Palettes.palettes[Palettes.selectedIndex].selectedColor = currentColorIndex;
+                                }
+                            });
+                        }
+                    }
+                }
             }
 
             using (Clay.Element(Clay.Id("Sidebar"), new()
