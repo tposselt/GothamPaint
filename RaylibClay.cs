@@ -7,7 +7,7 @@ public static class RaylibClay
 {
     public static Font[] Fonts = new Font[10];
 
-    private static Color ToColor(Clay_Color color) => new()
+    public static Color ToColor(Clay_Color color) => new()
     {
         R = (byte)MathF.Round(color.r),
         G = (byte)MathF.Round(color.g),
