@@ -24,6 +24,7 @@ public class Program
 
         Layout.InitializeText("");
         using Canvas canvas = new(400, 400);
+        Layout.ResizeCallback += canvas.ResizeCanvas;
         Camera camera = new(canvas.Width, canvas.Height);
 
         while (!Raylib.WindowShouldClose())
@@ -32,23 +33,12 @@ public class Program
             Clay.SetPointerState(Raylib.GetMousePosition(), Raylib.IsMouseButtonDown(0));
             Clay.UpdateScrollContainers(true, Raylib.GetMouseWheelMoveV(), Raylib.GetFrameTime());
 
-            camera.Move();
-
-            Clay.BeginLayout();
-            Layout.Sidebar();
-            var commands = Clay.EndLayout();
-
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Raylib.GetColor(0x11151CFF));
 
-            camera.Begin();
-            if (!Layout.IsResizeCanvasOpen)
-            {
-                canvas.Draw(camera.WorldMousePosition());
-            }
-            camera.End();
+            SceneController.DrawScene(camera, canvas);
+            SceneController.DrawUI();
 
-            RaylibClay.RenderCommands(commands);
             Raylib.DrawFPS(Raylib.GetScreenWidth() - 100, Raylib.GetScreenHeight() - 20);
             Raylib.EndDrawing();
         }

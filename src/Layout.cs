@@ -293,6 +293,7 @@ public static class Layout
                         if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_PRESSED_THIS_FRAME)
                         {
                             ResizeCallback.Invoke(400, 400);
+                            IsResizeCanvasOpen = false;
                         }
                     });
                 }
@@ -323,6 +324,7 @@ public static class Layout
                         if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_PRESSED_THIS_FRAME)
                         {
                             ResizeCallback.Invoke(800, 600);
+                            IsResizeCanvasOpen = false;
                         }
                     });
                 }
@@ -353,6 +355,7 @@ public static class Layout
                         if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_PRESSED_THIS_FRAME)
                         {
                             ResizeCallback.Invoke(1200, 800);
+                            IsResizeCanvasOpen = false;
                         }
                     });
                 }
@@ -360,8 +363,8 @@ public static class Layout
         }
     }
 
-    public static void OpenResizeCanvas()
+    public static void ToggleResizeCanvas()
     {
-        IsResizeCanvasOpen = true;
+        IsResizeCanvasOpen = !IsResizeCanvasOpen;
     }
 }

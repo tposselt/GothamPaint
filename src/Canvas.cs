@@ -13,8 +13,8 @@ public enum Tool
 
 public class Canvas : IDisposable
 {
-    public int Width { get; private init; }
-    public int Height { get; private init; }
+    public int Width { get; private set; }
+    public int Height { get; private set; }
     private Image canvasImage;
     private Texture2D canvasTexture;
     private bool refreshTexture;
@@ -28,6 +28,17 @@ public class Canvas : IDisposable
         canvasImage = Raylib.GenImageColor(Width, Height, RaylibClay.ToColor(Palettes.backgroundColor));
         canvasTexture = Raylib.LoadTextureFromImage(canvasImage);
         tools = [new Pencil(canvasTexture), new Eraser(canvasTexture), new FloodFill(canvasTexture)];
+        refreshTexture = true;
+    }
+
+    public void ResizeCanvas(int width, int height)
+    {
+        Width = width;
+        Height = height;
+        Raylib.UnloadTexture(canvasTexture);
+        Raylib.UnloadImage(canvasImage);
+        canvasImage = Raylib.GenImageColor(Width, Height, RaylibClay.ToColor(Palettes.backgroundColor));
+        canvasTexture = Raylib.LoadTextureFromImage(canvasImage);
         refreshTexture = true;
     }
 
