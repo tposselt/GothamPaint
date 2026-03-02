@@ -34,8 +34,16 @@ public class Camera
         {
             DragCurrent = Raylib.GetMousePosition();
             Vector2 delta = Vector2.Subtract(DragCurrent, DragStart);
+            delta /= rlCamera.Zoom;
             rlCamera.Target = Vector2.Subtract(rlCamera.Target, delta);
             DragStart = DragCurrent;
+        }
+
+        float mouseWheel = Raylib.GetMouseWheelMoveV().Y;
+        if (Math.Abs(mouseWheel) > 0)
+        {
+            rlCamera.Zoom *= mouseWheel * Raylib.GetFrameTime() * 10 + 1;
+            rlCamera.Zoom = Math.Clamp(rlCamera.Zoom, 0.1f, 10f);
         }
     }
 

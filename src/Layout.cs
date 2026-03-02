@@ -290,7 +290,7 @@ public static class Layout
 
                     Clay.OnHover((id, pointer, userData) =>
                     {
-                        if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_PRESSED_THIS_FRAME)
+                        if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_RELEASED_THIS_FRAME)
                         {
                             ResizeCallback.Invoke(400, 400);
                             IsResizeCanvasOpen = false;
@@ -321,7 +321,7 @@ public static class Layout
 
                     Clay.OnHover((id, pointer, userData) =>
                     {
-                        if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_PRESSED_THIS_FRAME)
+                        if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_RELEASED_THIS_FRAME)
                         {
                             ResizeCallback.Invoke(800, 600);
                             IsResizeCanvasOpen = false;
@@ -352,7 +352,7 @@ public static class Layout
 
                     Clay.OnHover((id, pointer, userData) =>
                     {
-                        if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_PRESSED_THIS_FRAME)
+                        if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_RELEASED_THIS_FRAME)
                         {
                             ResizeCallback.Invoke(1200, 800);
                             IsResizeCanvasOpen = false;
