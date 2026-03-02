@@ -42,7 +42,10 @@ public class Program
             Raylib.ClearBackground(Raylib.GetColor(0x11151CFF));
 
             camera.Begin();
-            canvas.Draw(camera.WorldMousePosition());
+            if (!Layout.IsResizeCanvasOpen)
+            {
+                canvas.Draw(camera.WorldMousePosition());
+            }
             camera.End();
 
             RaylibClay.RenderCommands(commands);

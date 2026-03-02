@@ -85,8 +85,25 @@ public static class RaylibClay
                         break;
                     }
                 case Clay_RenderCommandType.CLAY_RENDER_COMMAND_TYPE_BORDER:
-                    // throw new NotImplementedException();
-                    break;
+                    {
+                        var config = renderCommand->renderData.border;
+
+                        var box = new Rectangle(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
+                        var color = ToColor(config.color);
+
+                        Vector2 topLeft = new(box.X - config.width.left / 2, box.Y - config.width.top / 2);
+                        Vector2 topRight = new(box.X + box.Width + config.width.right / 2, box.Y - config.width.top / 2);
+                        Vector2 bottomLeft = new(box.X - config.width.left / 2, box.Y + box.Height + config.width.bottom / 2);
+                        Vector2 bottomRight = new(box.X + box.Width + config.width.right / 2, box.Y + box.Height + config.width.bottom / 2);
+                        Raylib.DrawLineEx(topLeft - new Vector2(config.width.left / 2, 0),
+                            topRight + new Vector2(config.width.right / 2, 0), config.width.top, color);
+                        Raylib.DrawLineEx(bottomLeft - new Vector2(config.width.left / 2, 0),
+                            bottomRight + new Vector2(config.width.right / 2, 0), config.width.bottom, color);
+                        Raylib.DrawLineEx(topLeft, bottomLeft, config.width.left, color);
+                        Raylib.DrawLineEx(topRight, bottomRight, config.width.right, color);
+
+                        break;
+                    }
                 case Clay_RenderCommandType.CLAY_RENDER_COMMAND_TYPE_TEXT:
                     {
                         var asStr = renderCommand->renderData.text.stringContents.ToCSharpString();

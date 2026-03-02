@@ -4,6 +4,13 @@ namespace GothamPaint;
 
 public static class Layout
 {
+    public static bool IsResizeCanvasOpen { get; private set; } = false;
+    public delegate void OnResizeCanvas(int width, int height);
+    public static OnResizeCanvas ResizeCallback = delegate { };
+
+    private static Clay_Color BackgroundColor = new(10, 55, 73);
+    private static Clay_Color BackgroundColorLight = new(36, 83, 97);
+
     public static unsafe void InitializeText(string font)
     {
         Clay.SetMeasureTextFunction(RaylibClay.MeasureText);
@@ -24,7 +31,7 @@ public static class Layout
         {
             using (Clay.Element(Clay.Id("Taskbar"), new()
             {
-                backgroundColor = new Clay_Color(36, 83, 97),
+                backgroundColor = BackgroundColorLight,
                 layout = new()
                 {
                     sizing = new Clay_Sizing(Clay_SizingAxis.Grow(), Clay_SizingAxis.Fixed(100)),
@@ -37,7 +44,7 @@ public static class Layout
             {
                 using (Clay.Element(Clay.Id("Logo"), new()
                 {
-                    backgroundColor = new Clay_Color(10, 55, 73),
+                    backgroundColor = BackgroundColor,
                     layout = new()
                     {
                         sizing = new Clay_Sizing(Clay_SizingAxis.Fixed(sidebarWidth - 10), Clay_SizingAxis.Grow()),
@@ -48,7 +55,7 @@ public static class Layout
 
                 using (Clay.Element(Clay.Id("Tools"), new()
                 {
-                    backgroundColor = new Clay_Color(10, 55, 73),
+                    backgroundColor = BackgroundColor,
                     layout = new()
                     {
                         sizing = new Clay_Sizing(Clay_SizingAxis.Fixed((toolButtonSize * 3) + 40), Clay_SizingAxis.Grow()),
@@ -116,7 +123,7 @@ public static class Layout
 
                 using (Clay.Element(Clay.Id("Colors"), new()
                 {
-                    backgroundColor = new Clay_Color(10, 55, 73),
+                    backgroundColor = BackgroundColor,
                     layout = new()
                     {
                         sizing = new Clay_Sizing(Clay_SizingAxis.Grow(), Clay_SizingAxis.Grow()),
@@ -156,7 +163,7 @@ public static class Layout
 
             using (Clay.Element(Clay.Id("Sidebar"), new()
             {
-                backgroundColor = new Clay_Color(36, 83, 97),
+                backgroundColor = BackgroundColorLight,
                 layout = new()
                 {
                     sizing = new Clay_Sizing(Clay_SizingAxis.Fixed(sidebarWidth), Clay_SizingAxis.Grow()),
@@ -178,7 +185,7 @@ public static class Layout
                     int currentPaletteIndex = i;
                     using (Clay.Element(Clay.Id(palette.name), new()
                     {
-                        backgroundColor = i == Palettes.selectedIndex ? new Clay_Color(9, 31, 46) : new Clay_Color(10, 55, 73),
+                        backgroundColor = i == Palettes.selectedIndex ? new Clay_Color(9, 31, 46) : BackgroundColor,
                         layout = new()
                         {
                             sizing = new Clay_Sizing(Clay_SizingAxis.Grow(), Clay_SizingAxis.Fixed(sidebarWidth / 2)),
@@ -196,7 +203,7 @@ public static class Layout
                 }
                 using (Clay.Element(Clay.Id("Filer"), new()
                 {
-                    backgroundColor = new Clay_Color(10, 55, 73),
+                    backgroundColor = BackgroundColor,
                     layout = new()
                     {
                         sizing = new Clay_Sizing(Clay_SizingAxis.Grow(), Clay_SizingAxis.Grow()),
@@ -204,5 +211,157 @@ public static class Layout
                 })) { }
             }
         }
+
+        if (IsResizeCanvasOpen)
+        {
+            using (Clay.Element(Clay.Id("ResizeCanvasBox"), new()
+            {
+                backgroundColor = BackgroundColor,
+                border = new()
+                {
+                    color = BackgroundColorLight,
+                    width = new() { left = 5, top = 5, right = 5, bottom = 5 },
+                },
+                floating = new()
+                {
+                    offset = new() { x = 0, y = 0 },
+                    attachTo = Clay_FloatingAttachToElement.CLAY_ATTACH_TO_ROOT,
+                    attachPoints = new()
+                    {
+                        element = Clay_FloatingAttachPointType.CLAY_ATTACH_POINT_CENTER_CENTER,
+                        parent = Clay_FloatingAttachPointType.CLAY_ATTACH_POINT_CENTER_CENTER,
+                    }
+                },
+                layout = new()
+                {
+                    sizing = new Clay_Sizing(Clay_SizingAxis.Fixed(400), Clay_SizingAxis.Fixed(400)),
+                    padding = new() { left = 5, top = 5, right = 5, bottom = 5 },
+                    layoutDirection = Clay_LayoutDirection.CLAY_TOP_TO_BOTTOM,
+                    childAlignment = new()
+                    {
+                        x = Clay_LayoutAlignmentX.CLAY_ALIGN_X_CENTER,
+                        y = Clay_LayoutAlignmentY.CLAY_ALIGN_Y_TOP,
+                    },
+                    childGap = 25,
+                }
+            }))
+            {
+                using (Clay.Element(Clay.Id("ResizeCanvasText"), new()
+                {
+                    layout = new()
+                    {
+                        sizing = new Clay_Sizing(Clay_SizingAxis.Grow(), Clay_SizingAxis.Fixed(50)),
+                        childAlignment = new()
+                        {
+                            x = Clay_LayoutAlignmentX.CLAY_ALIGN_X_LEFT,
+                            y = Clay_LayoutAlignmentY.CLAY_ALIGN_Y_TOP,
+                        }
+                    }
+                }))
+                {
+                    Clay.TextElement("Resize Canvas", new()
+                    {
+                        fontSize = 40,
+                        letterSpacing = 4,
+                        textColor = BackgroundColorLight,
+                    });
+                }
+
+                using (Clay.Element(Clay.Id("SmallCanvasButton"), new()
+                {
+                    layout = new()
+                    {
+                        sizing = new(Clay_SizingAxis.Fixed(150), Clay_SizingAxis.Fixed(40)),
+                        padding = new() { left = 10, right = 10, top = 0, bottom = 0 },
+                    },
+                    border = new()
+                    {
+                        color = BackgroundColorLight,
+                        width = new() { left = 5, top = 5, right = 5, bottom = 5 },
+                    }
+                }))
+                {
+                    Clay.TextElement("Small", new()
+                    {
+                        fontSize = 40,
+                        letterSpacing = 2,
+                        textColor = BackgroundColorLight,
+                    });
+
+                    Clay.OnHover((id, pointer, userData) =>
+                    {
+                        if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_PRESSED_THIS_FRAME)
+                        {
+                            ResizeCallback.Invoke(400, 400);
+                        }
+                    });
+                }
+
+                using (Clay.Element(Clay.Id("MediumCanvasButton"), new()
+                {
+                    layout = new()
+                    {
+                        sizing = new(Clay_SizingAxis.Fixed(150), Clay_SizingAxis.Fixed(40)),
+                        padding = new() { left = 10, right = 10, top = 0, bottom = 0 },
+                    },
+                    border = new()
+                    {
+                        color = BackgroundColorLight,
+                        width = new() { left = 5, top = 5, right = 5, bottom = 5 },
+                    }
+                }))
+                {
+                    Clay.TextElement("Medium", new()
+                    {
+                        fontSize = 40,
+                        letterSpacing = 2,
+                        textColor = BackgroundColorLight,
+                    });
+
+                    Clay.OnHover((id, pointer, userData) =>
+                    {
+                        if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_PRESSED_THIS_FRAME)
+                        {
+                            ResizeCallback.Invoke(800, 600);
+                        }
+                    });
+                }
+
+                using (Clay.Element(Clay.Id("LargeCanvasButton"), new()
+                {
+                    layout = new()
+                    {
+                        sizing = new(Clay_SizingAxis.Fixed(150), Clay_SizingAxis.Fixed(40)),
+                        padding = new() { left = 10, right = 10, top = 0, bottom = 0 },
+                    },
+                    border = new()
+                    {
+                        color = BackgroundColorLight,
+                        width = new() { left = 5, top = 5, right = 5, bottom = 5 },
+                    }
+                }))
+                {
+                    Clay.TextElement("Large", new()
+                    {
+                        fontSize = 40,
+                        letterSpacing = 2,
+                        textColor = BackgroundColorLight,
+                    });
+
+                    Clay.OnHover((id, pointer, userData) =>
+                    {
+                        if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_PRESSED_THIS_FRAME)
+                        {
+                            ResizeCallback.Invoke(1200, 800);
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    public static void OpenResizeCanvas()
+    {
+        IsResizeCanvasOpen = true;
     }
 }
