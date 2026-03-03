@@ -44,6 +44,7 @@ public class Palette(string name, Clay_Color[] colors)
         Image smallImage = Raylib.LoadImage($"assets/stamps/{name.ToLower()}.png");
         Raylib.ImageResize(ref smallImage, 70, 70);
         stampIcon = Raylib.LoadTextureFromImage(smallImage);
+        Raylib.UnloadImage(smallImage);
     }
 
     public Color GetRaylibColor()

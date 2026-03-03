@@ -49,6 +49,7 @@ public class Program
             Raylib.EndDrawing();
         }
 
+        Raylib.UnloadImage(windowIcon);
         Raylib.CloseWindow();
     }
 
