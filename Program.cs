@@ -19,11 +19,13 @@ public class Program
         Raylib.SetWindowMaxSize(monitorWidth, monitorHeight);
         Raylib.SetWindowSize(Math.Min(1200, monitorWidth), Math.Min(900, monitorHeight));
 
+        Palettes.Initialize();
+
         using var arena = Clay.CreateArena(Clay.MinMemorySize());
         Clay.Initialize(arena, new Clay_Dimensions(Raylib.GetScreenWidth(), Raylib.GetScreenHeight()), ErrorHandler);
         Clay.SetDebugModeEnabled(false);
 
-        Layout.InitializeText("");
+        Layout.Initialize("");
         using Canvas canvas = new(400, 400);
         Layout.ResizeCallback += canvas.ResizeCanvas;
         Camera camera = new(canvas.Width, canvas.Height);
