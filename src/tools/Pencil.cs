@@ -8,7 +8,6 @@ public class Pencil(Texture2D canvasTexture, bool eraser = false) : PaintTool(ca
 {
     private Vector2 prevMousePos;
     private Vector2[] prevCorners = new Vector2[2];
-    private int BrushSize { get; set; } = 10;
 
     public override void Draw(ref Image canvasImage, Vector2 mousePos, out bool updateCanvas)
     {
@@ -19,18 +18,18 @@ public class Pencil(Texture2D canvasTexture, bool eraser = false) : PaintTool(ca
 
         if (Raylib.IsMouseButtonDown(MouseButton.Left))
         {
-            Color selectedColor = ( eraser ?
+            Color selectedColor = (eraser ?
                 RaylibClay.ToColor(Palettes.backgroundColor) :
-                Palettes.palettes[Palettes.selectedIndex].GetRaylibColor() 
+                Palettes.palettes[Palettes.selectedIndex].GetRaylibColor()
             );
-            if (BrushSize == 1)
+            if (Layout.BrushSize == 1)
             {
                 Raylib.ImageDrawLineV(ref canvasImage, prevMousePos, mousePos, selectedColor);
             }
             else
             {
                 Vector2 direction = Vector2.Normalize(Vector2.Subtract(mousePos, prevMousePos));
-                Vector2 perpendicular = new(-direction.Y * BrushSize / 2, direction.X * BrushSize / 2);
+                Vector2 perpendicular = new(-direction.Y * Layout.BrushSize / 2, direction.X * Layout.BrushSize / 2);
                 Vector2[] corners =
                 [
                     mousePos - perpendicular,
