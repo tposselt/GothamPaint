@@ -6,6 +6,19 @@ namespace GothamPaint;
 public static class Layout
 {
     public static bool HoveringGUI { get; private set; } = false;
+    private static int brushSize = 10;
+    public static int BrushSize
+    {
+        get
+        {
+            return brushSize;
+        }
+        private set
+        {
+            brushSize = (int)(value / 5.0f) * 5;
+            brushSize = Math.Clamp(brushSize, 1, 100);
+        }
+    }
 
     public static bool IsResizeCanvasOpen { get; private set; } = false;
     public delegate void OnResizeCanvas(int width, int height);
@@ -291,6 +304,95 @@ public static class Layout
                         if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_RELEASED_THIS_FRAME)
                         {
                             ExportCallback();
+                        }
+                    });
+                }
+
+                using (Clay.Element(Clay.Id("PixelSizeLabel"), new()
+                {
+                    backgroundColor = BackgroundColor,
+                    layout = new()
+                    {
+                        sizing = new(Clay_SizingAxis.Fixed(120), Clay_SizingAxis.Fixed(40)),
+                        padding = new() { left = 10, right = 10, top = 0, bottom = 0 },
+                    },
+                    border = new()
+                    {
+                        color = BackgroundColorLight,
+                        width = new() { left = 5, top = 5, right = 5, bottom = 5 },
+                    }
+                }))
+                {
+                    Clay.TextElement($"{BrushSize}px", new()
+                    {
+                        fontSize = 40,
+                        letterSpacing = 2,
+                        textColor = BackgroundColorLight,
+                    });
+
+                    Clay.OnHover((id, pointer, userData) => HoveringGUI = true);
+                }
+
+                using (Clay.Element(Clay.Id("DecreaseBrushSizeButton"), new()
+                {
+                    backgroundColor = BackgroundColor,
+                    layout = new()
+                    {
+                        sizing = new(Clay_SizingAxis.Fixed(40), Clay_SizingAxis.Fixed(40)),
+                        padding = new() { left = 10, right = 10, top = 0, bottom = 0 },
+                    },
+                    border = new()
+                    {
+                        color = BackgroundColorLight,
+                        width = new() { left = 5, top = 5, right = 5, bottom = 5 },
+                    }
+                }))
+                {
+                    Clay.TextElement("<", new()
+                    {
+                        fontSize = 40,
+                        letterSpacing = 2,
+                        textColor = BackgroundColorLight,
+                    });
+
+                    Clay.OnHover((id, pointer, userData) =>
+                    {
+                        HoveringGUI = true;
+                        if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_RELEASED_THIS_FRAME)
+                        {
+                            BrushSize -= 5;
+                        }
+                    });
+                }
+
+                using (Clay.Element(Clay.Id("IncreaseBrushSizeButton"), new()
+                {
+                    backgroundColor = BackgroundColor,
+                    layout = new()
+                    {
+                        sizing = new(Clay_SizingAxis.Fixed(40), Clay_SizingAxis.Fixed(40)),
+                        padding = new() { left = 10, right = 10, top = 0, bottom = 0 },
+                    },
+                    border = new()
+                    {
+                        color = BackgroundColorLight,
+                        width = new() { left = 5, top = 5, right = 5, bottom = 5 },
+                    }
+                }))
+                {
+                    Clay.TextElement(">", new()
+                    {
+                        fontSize = 40,
+                        letterSpacing = 2,
+                        textColor = BackgroundColorLight,
+                    });
+
+                    Clay.OnHover((id, pointer, userData) =>
+                    {
+                        HoveringGUI = true;
+                        if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_RELEASED_THIS_FRAME)
+                        {
+                            BrushSize += 5;
                         }
                     });
                 }
