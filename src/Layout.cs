@@ -20,7 +20,7 @@ public static class Layout
 
     public static unsafe void Initialize()
     {
-        logoTexture = Raylib.LoadTexture("Gotham_paint.png");
+        logoTexture = Raylib.LoadTexture("assets/images/logo.png");
         Clay.SetMeasureTextFunction(RaylibClay.MeasureText);
     }
 
@@ -54,27 +54,15 @@ public static class Layout
             {
                 fixed (Texture2D* image = &logoTexture)
                 {
-                    using (Clay.Element(Clay.Id("LogoContainer"), new()
+                    using (Clay.Element(Clay.Id("Logo"), new()
                     {
+                        backgroundColor = BackgroundColor,
+                        image = new() { imageData = image },
                         layout = new()
                         {
-                            sizing = new(Clay_SizingAxis.Fixed(sidebarWidth - 10), Clay_SizingAxis.Fixed(50)),
-                            childAlignment = new()
-                            {
-                                x = Clay_LayoutAlignmentX.CLAY_ALIGN_X_CENTER
-                            }
+                            sizing = new Clay_Sizing(Clay_SizingAxis.Fixed(sidebarWidth - 10), Clay_SizingAxis.Grow()),
                         }
-                    }))
-                    {
-                        using (Clay.Element(Clay.Id("Logo"), new()
-                        {
-                            image = new() { imageData = image },
-                            layout = new()
-                            {
-                                sizing = new(Clay_SizingAxis.Fixed(100), Clay_SizingAxis.Fixed(50)),
-                            }
-                        })) { }
-                    }
+                    })) { }
                 }
 
                 int toolButtonSize = 60;
@@ -180,6 +168,38 @@ public static class Layout
                                 if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_PRESSED_THIS_FRAME)
                                 {
                                     Palettes.palettes[Palettes.selectedIndex].selectedColor = currentColorIndex;
+                                }
+                            });
+                        }
+                    }
+
+                    using (Clay.Element(Clay.Id("stampSpacer"), new()
+                    {
+                        layout = new()
+                        {
+                            sizing = new Clay_Sizing(Clay_SizingAxis.Fixed(toolButtonSize / 2), Clay_SizingAxis.Fixed(toolButtonSize)),
+                        }
+                    }))
+                    {}
+
+                    fixed (Texture2D* image = &Palettes.palettes[Palettes.selectedIndex].stampIcon)
+                    {
+                        using (Clay.Element(Clay.Id(palette.name + "stamp"), new()
+                        {
+                            backgroundColor = BackgroundColor,
+                            image = new() { imageData = image },
+                            
+                            layout = new()
+                            {
+                                sizing = new Clay_Sizing(Clay_SizingAxis.Fixed(100), Clay_SizingAxis.Grow()),
+                            }
+                        })) {
+                            Clay.OnHover((id, pointer, userData) =>
+                            {
+                                if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_PRESSED_THIS_FRAME)
+                                {
+                                    Palettes.stampIndex = Palettes.selectedIndex;
+                                    Canvas.SelectedToolIndex = Tool.Stamp;
                                 }
                             });
                         }
@@ -311,6 +331,7 @@ public static class Layout
                         {
                             if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_PRESSED_THIS_FRAME)
                             {
+                                Raylib.PlaySound(Palettes.palettes[currentPaletteIndex].voiceLine);
                                 Palettes.selectedIndex = currentPaletteIndex;
                             }
                         });

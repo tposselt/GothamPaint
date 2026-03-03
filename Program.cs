@@ -9,7 +9,11 @@ public class Program
     {
         Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
         Raylib.InitWindow(1200, 900, "Gotham Paint");
+        Raylib.InitAudioDevice();
         Raylib.SetTargetFPS(30);
+
+        Image windowIcon = Raylib.LoadImage("assets/images/app_icon.png");
+        Raylib.SetWindowIcon(windowIcon);
 
         int monitor = Raylib.GetCurrentMonitor();
         int monitorWidth = Raylib.GetMonitorWidth(monitor);
@@ -17,6 +21,8 @@ public class Program
         Console.WriteLine($"Monitor size: {monitorWidth}x{monitorHeight}");
         Raylib.SetWindowMaxSize(monitorWidth, monitorHeight);
         Raylib.SetWindowSize(Math.Min(1200, monitorWidth), Math.Min(900, monitorHeight));
+
+        Palettes.Initialize();
 
         using var arena = Clay.CreateArena(Clay.MinMemorySize());
         Clay.Initialize(arena, new Clay_Dimensions(Raylib.GetScreenWidth(), Raylib.GetScreenHeight()), ErrorHandler);
@@ -44,6 +50,7 @@ public class Program
             Raylib.EndDrawing();
         }
 
+        Raylib.UnloadImage(windowIcon);
         Raylib.CloseWindow();
     }
 
