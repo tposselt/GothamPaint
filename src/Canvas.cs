@@ -9,6 +9,7 @@ public enum Tool
     Pencil,
     Eraser,
     Flood,
+    Stamp,
 }
 
 public class Canvas : IDisposable
@@ -27,7 +28,7 @@ public class Canvas : IDisposable
         Height = height;
         canvasImage = Raylib.GenImageColor(Width, Height, RaylibClay.ToColor(Palettes.backgroundColor));
         canvasTexture = Raylib.LoadTextureFromImage(canvasImage);
-        tools = [new Pencil(canvasTexture), new Pencil(canvasTexture, true), new FloodFill(canvasTexture)];
+        tools = [new Pencil(canvasTexture), new Pencil(canvasTexture, true), new FloodFill(canvasTexture), new Stamp(canvasTexture)];
         refreshTexture = true;
     }
 

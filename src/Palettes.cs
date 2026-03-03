@@ -3,6 +3,7 @@ using Raylib_cs;
 
 public static class Palettes
 {
+    public static int stampIndex = 0;
     public static int selectedIndex = 0;
     public static readonly Clay_Color backgroundColor = new(88, 95, 97);
 
@@ -27,6 +28,7 @@ public struct Palette(string name, Clay_Color[] colors)
     public readonly string name = name;
     public readonly Clay_Color[] palette = colors;
     public int selectedColor = 0;
+    public readonly Image stampImage = Raylib.LoadImage($"assets/stamps/{name.ToLower()}.png");
 
     public Color GetRaylibColor()
     {

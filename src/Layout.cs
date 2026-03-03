@@ -1,4 +1,5 @@
 using Clay_cs;
+using Raylib_cs;
 
 namespace GothamPaint;
 
@@ -10,6 +11,9 @@ public static class Layout
 
     private static Clay_Color BackgroundColor = new(10, 55, 73);
     private static Clay_Color BackgroundColorLight = new(36, 83, 97);
+
+    private static Image logoImage = Raylib.LoadImage("assets/images/logo.png");
+    private static Texture2D logoTexture = Raylib.LoadTextureFromImage(logoImage);
 
     public static unsafe void InitializeText(string font)
     {
@@ -157,6 +161,25 @@ public static class Layout
                                 }
                             });
                         }
+                    }
+
+                    using (Clay.Element(Clay.Id(palette.name + "stamp"), new()
+                    {
+                        backgroundColor = new Clay_Color(255, 255, 255),
+                        layout = new()
+                        {
+                            sizing = new Clay_Sizing(Clay_SizingAxis.Fixed(toolButtonSize), Clay_SizingAxis.Fixed(toolButtonSize)),
+                        }
+                    }))
+                    {
+                        Clay.OnHover((id, pointer, userData) =>
+                        {
+                            if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_PRESSED_THIS_FRAME)
+                            {
+                                Palettes.stampIndex = Palettes.selectedIndex;
+                                Canvas.SelectedToolIndex = Tool.Stamp;
+                            }
+                        });
                     }
                 }
             }
