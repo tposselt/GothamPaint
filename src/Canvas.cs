@@ -27,7 +27,7 @@ public class Canvas : IDisposable
         Height = height;
         canvasImage = Raylib.GenImageColor(Width, Height, RaylibClay.ToColor(Palettes.backgroundColor));
         canvasTexture = Raylib.LoadTextureFromImage(canvasImage);
-        tools = [new Pencil(canvasTexture), new Eraser(canvasTexture), new FloodFill(canvasTexture)];
+        tools = [new Pencil(canvasTexture), new Pencil(canvasTexture, true), new FloodFill(canvasTexture)];
         refreshTexture = true;
     }
 

@@ -1,9 +1,10 @@
-using System.Numerics;
+using Clay_cs;
 using Raylib_cs;
+using System.Numerics;
 
 namespace GothamPaint;
 
-public class Pencil(Texture2D canvasTexture) : PaintTool(canvasTexture)
+public class Pencil(Texture2D canvasTexture, bool eraser = false) : PaintTool(canvasTexture)
 {
     private Vector2 prevMousePos;
     private Vector2[] prevCorners = new Vector2[2];
@@ -18,10 +19,13 @@ public class Pencil(Texture2D canvasTexture) : PaintTool(canvasTexture)
 
         if (Raylib.IsMouseButtonDown(MouseButton.Left))
         {
+            Color selectedColor = ( eraser ?
+                RaylibClay.ToColor(Palettes.backgroundColor) :
+                Palettes.palettes[Palettes.selectedIndex].GetRaylibColor() 
+            );
             if (BrushSize == 1)
             {
-                Palette selectedPalette = Palettes.palettes[Palettes.selectedIndex];
-                Raylib.ImageDrawLineV(ref canvasImage, prevMousePos, mousePos, selectedPalette.GetRaylibColor());
+                Raylib.ImageDrawLineV(ref canvasImage, prevMousePos, mousePos, selectedColor);
             }
             else
             {
@@ -30,19 +34,18 @@ public class Pencil(Texture2D canvasTexture) : PaintTool(canvasTexture)
                 Vector2[] corners =
                 [
                     mousePos - perpendicular,
-                mousePos + perpendicular,
-            ];
-                DrawThickLine(ref canvasImage, prevCorners, corners);
+                    mousePos + perpendicular,
+                ];
+                DrawThickLine(ref canvasImage, prevCorners, corners, selectedColor);
                 prevCorners = corners;
             }
         }
-
 
         prevMousePos = mousePos;
         updateCanvas = true;
     }
 
-    private void DrawThickLine(ref Image canvasImage, Vector2[] start, Vector2[] end)
+    private void DrawThickLine(ref Image canvasImage, Vector2[] start, Vector2[] end, Color selectedColor)
     {
         int totalArea = (int)MathF.Ceiling((start[1] - start[0]).Length() * (end[0] - start[1]).Length());
         int currentArea = 0;
@@ -59,8 +62,7 @@ public class Pencil(Texture2D canvasTexture) : PaintTool(canvasTexture)
 
                 if (Raylib.CheckCollisionPointPoly(new Vector2(x, y), [start[0], start[1], end[1], end[0]]))
                 {
-                    Palette selectedPalette = Palettes.palettes[Palettes.selectedIndex];
-                    Raylib.ImageDrawPixel(ref canvasImage, x, y, selectedPalette.GetRaylibColor());
+                    Raylib.ImageDrawPixel(ref canvasImage, x, y, selectedColor);
                     currentArea++;
                 }
             }
