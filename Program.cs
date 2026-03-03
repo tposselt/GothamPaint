@@ -22,7 +22,7 @@ public class Program
         Clay.Initialize(arena, new Clay_Dimensions(Raylib.GetScreenWidth(), Raylib.GetScreenHeight()), ErrorHandler);
         Clay.SetDebugModeEnabled(false);
 
-        Layout.InitializeText("");
+        Layout.Initialize();
         using Canvas canvas = new(400, 400);
         Layout.ResizeCallback += canvas.ResizeCanvas;
         Camera camera = new(canvas.Width, canvas.Height);

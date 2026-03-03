@@ -135,7 +135,7 @@ public static class RaylibClay
                         Raylib.DrawTextureEx(texture,
                             new Vector2(boundingBox.x, boundingBox.y),
                             0,
-                            boundingBox.width / boundingBox.width,
+                            boundingBox.width / texture.Dimensions.X,
                             Color.White
                         );
                         break;

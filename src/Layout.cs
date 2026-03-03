@@ -1,4 +1,5 @@
 using Clay_cs;
+using Raylib_cs;
 
 namespace GothamPaint;
 
@@ -11,14 +12,17 @@ public static class Layout
     private static Clay_Color BackgroundColor = new(10, 55, 73);
     private static Clay_Color BackgroundColorLight = new(36, 83, 97);
 
-    public static unsafe void InitializeText(string font)
+    private static Texture2D logoTexture;
+
+    public static unsafe void Initialize()
     {
+        logoTexture = Raylib.LoadTexture("Gotham_paint.png");
         Clay.SetMeasureTextFunction(RaylibClay.MeasureText);
     }
 
     private const int sidebarWidth = 200;
 
-    public static void Sidebar()
+    public static unsafe void Sidebar()
     {
         using (Clay.Element(Clay.Id("FullContainer"), new()
         {
@@ -42,14 +46,17 @@ public static class Layout
                 }
             }))
             {
-                using (Clay.Element(Clay.Id("Logo"), new()
+                fixed (Texture2D* image = &logoTexture)
                 {
-                    backgroundColor = BackgroundColor,
-                    layout = new()
+                    using (Clay.Element(Clay.Id("Logo"), new()
                     {
-                        sizing = new Clay_Sizing(Clay_SizingAxis.Fixed(sidebarWidth - 10), Clay_SizingAxis.Grow()),
-                    }
-                })) { }
+                        image = new() { imageData = image },
+                        layout = new()
+                        {
+                            sizing = new(Clay_SizingAxis.Fixed(100), Clay_SizingAxis.Fixed(50)),
+                        }
+                    })) { }
+                }
 
                 int toolButtonSize = 60;
 
