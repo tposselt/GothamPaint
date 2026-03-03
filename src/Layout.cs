@@ -48,14 +48,27 @@ public static class Layout
             {
                 fixed (Texture2D* image = &logoTexture)
                 {
-                    using (Clay.Element(Clay.Id("Logo"), new()
+                    using (Clay.Element(Clay.Id("LogoContainer"), new()
                     {
-                        image = new() { imageData = image },
                         layout = new()
                         {
-                            sizing = new(Clay_SizingAxis.Fixed(100), Clay_SizingAxis.Fixed(50)),
+                            sizing = new(Clay_SizingAxis.Fixed(sidebarWidth - 10), Clay_SizingAxis.Fixed(50)),
+                            childAlignment = new()
+                            {
+                                x = Clay_LayoutAlignmentX.CLAY_ALIGN_X_CENTER
+                            }
                         }
-                    })) { }
+                    }))
+                    {
+                        using (Clay.Element(Clay.Id("Logo"), new()
+                        {
+                            image = new() { imageData = image },
+                            layout = new()
+                            {
+                                sizing = new(Clay_SizingAxis.Fixed(100), Clay_SizingAxis.Fixed(50)),
+                            }
+                        })) { }
+                    }
                 }
 
                 int toolButtonSize = 60;
