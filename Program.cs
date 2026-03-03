@@ -25,6 +25,7 @@ public class Program
         Layout.Initialize();
         using Canvas canvas = new(400, 400);
         Layout.ResizeCallback += canvas.ResizeCanvas;
+        Layout.ExportCallback += canvas.ExportToPNG;
         Camera camera = new(canvas.Width, canvas.Height);
 
         while (!Raylib.WindowShouldClose())

@@ -15,6 +15,7 @@ public class Canvas : IDisposable
 {
     public int Width { get; private set; }
     public int Height { get; private set; }
+    public bool canvasLocked = false;
     private Image canvasImage;
     private Texture2D canvasTexture;
     private bool refreshTexture;
@@ -42,6 +43,11 @@ public class Canvas : IDisposable
         refreshTexture = true;
     }
 
+    public void ExportToPNG()
+    {
+        Raylib.ExportImage(canvasImage, "gotham_masterpiece.png");
+    }
+
     public unsafe void Draw(Vector2 mousePos)
     {
         if (refreshTexture)
@@ -53,7 +59,7 @@ public class Canvas : IDisposable
 
         int x = (int)mousePos.X;
         int y = (int)mousePos.Y;
-        if (x >= 0 && x < Width && y >= 0 && y < Height)
+        if (!canvasLocked && x >= 0 && x < Width && y >= 0 && y < Height)
         {
             tools[(int)SelectedToolIndex].Draw(ref canvasImage, mousePos, out refreshTexture);
         }
