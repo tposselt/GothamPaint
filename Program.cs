@@ -9,6 +9,7 @@ public class Program
     {
         Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
         Raylib.InitWindow(1200, 900, "Gotham Paint");
+        Raylib.InitAudioDevice();
         Raylib.SetTargetFPS(30);
 
         int monitor = Raylib.GetCurrentMonitor();

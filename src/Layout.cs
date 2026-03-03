@@ -219,6 +219,7 @@ public static class Layout
                         {
                             if (pointer.state == Clay_PointerDataInteractionState.CLAY_POINTER_DATA_PRESSED_THIS_FRAME)
                             {
+                                Raylib.PlaySound(Palettes.palettes[currentPaletteIndex].voiceLine);
                                 Palettes.selectedIndex = currentPaletteIndex;
                             }
                         });

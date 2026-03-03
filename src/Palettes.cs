@@ -29,6 +29,7 @@ public struct Palette(string name, Clay_Color[] colors)
     public readonly Clay_Color[] palette = colors;
     public int selectedColor = 0;
     public readonly Image stampImage = Raylib.LoadImage($"assets/stamps/{name.ToLower()}.png");
+    public readonly Sound voiceLine = Raylib.LoadSound($"assets/audio/{name.ToLower()}.wav");
 
     public Color GetRaylibColor()
     {
