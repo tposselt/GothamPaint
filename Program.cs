@@ -12,6 +12,9 @@ public class Program
         Raylib.InitAudioDevice();
         Raylib.SetTargetFPS(30);
 
+        Image windowIcon = Raylib.LoadImage("assets/images/app_icon.png");
+        Raylib.SetWindowIcon(windowIcon);
+
         int monitor = Raylib.GetCurrentMonitor();
         int monitorWidth = Raylib.GetMonitorWidth(monitor);
         int monitorHeight = Raylib.GetMonitorHeight(monitor) - 200; // Account for taskbar
