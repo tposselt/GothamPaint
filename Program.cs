@@ -13,9 +13,9 @@ public class Program
         Raylib.SetTargetFPS(30);
 
         Image windowIcon = Raylib.LoadImage("assets/images/app_icon.png"); 
-        Music bgMusic = Raylib.LoadMusicStream("assets/audio/music.ogg");
+        Sound bgMusic = Raylib.LoadSound("assets/audio/music.ogg");
         Raylib.SetWindowIcon(windowIcon);
-        Raylib.PlayMusicStream(bgMusic);
+        Raylib.PlaySound(bgMusic);
 
         int monitor = Raylib.GetCurrentMonitor();
         int monitorWidth = Raylib.GetMonitorWidth(monitor);
@@ -36,13 +36,22 @@ public class Program
         Layout.ExportCallback += canvas.ExportToPNG;
         Camera camera = new(canvas.Width, canvas.Height);
 
+        long timeTilLoop = 599514800; // length of the song file
+        long lastTime = DateTime.Now.Ticks;
+
         while (!Raylib.WindowShouldClose())
         {
+            timeTilLoop -= (DateTime.Now.Ticks - lastTime);
+            lastTime = DateTime.Now.Ticks;
+            if (timeTilLoop <= 0)
+            {
+                timeTilLoop = 599514800;
+                Raylib.PlaySound(bgMusic);
+            }
+
             Clay.SetLayoutDimensions(new Clay_Dimensions(Raylib.GetScreenWidth(), Raylib.GetScreenHeight()));
             Clay.SetPointerState(Raylib.GetMousePosition(), Raylib.IsMouseButtonDown(0));
             Clay.UpdateScrollContainers(true, Raylib.GetMouseWheelMoveV(), Raylib.GetFrameTime());
-
-            Raylib.UpdateMusicStream(bgMusic);
 
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Raylib.GetColor(0x11151CFF));
