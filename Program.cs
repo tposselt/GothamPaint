@@ -13,7 +13,7 @@ public class Program
         Raylib.SetTargetFPS(30);
 
         Image windowIcon = Raylib.LoadImage("assets/images/app_icon.png"); 
-        Music bgMusic = Raylib.LoadMusicStream("assets/audio/music.wav");
+        Music bgMusic = Raylib.LoadMusicStream("assets/audio/music.ogg");
         Raylib.SetWindowIcon(windowIcon);
         Raylib.PlayMusicStream(bgMusic);
 
