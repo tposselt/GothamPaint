@@ -10,6 +10,9 @@ public static class Palettes
     public static Texture2D freeze;
     public static Texture2D bane;
     
+    public static int stampIndex = 0;
+    public static int selectedIndex = 0;
+    public static readonly Clay_Color backgroundColor = new(88, 95, 97);
 
     public static Palette batmanPalette = new(
         "Batman",
@@ -86,6 +89,15 @@ public static class Palettes
         freezePalette,
         banePalette
     };
+
+     public static void Initialize()
+    {
+        foreach (Palette palette in palettes)
+        {
+            palette.Initialize();
+        }
+    }
+    
     public static void LoadIcons()
     {
         for (int i = 0; i < palettes.Length; i++)
@@ -116,6 +128,17 @@ public struct Palette
         this.icon = default;
     }
     public int selectedColor = 0;
+    public readonly Image stampImage = Raylib.LoadImage($"assets/stamps/{name.ToLower().Replace(" ", "")}.png");
+    public Texture2D stampIcon;
+    public readonly Sound voiceLine = Raylib.LoadSound($"assets/audio/{name.ToLower().Replace(" ", "")}.wav");
+
+    public void Initialize()
+    {
+        Image smallImage = Raylib.LoadImage($"assets/stamps/{name.ToLower().Replace(" ", "")}.png");
+        Raylib.ImageResize(ref smallImage, 70, 70);
+        stampIcon = Raylib.LoadTextureFromImage(smallImage);
+        Raylib.UnloadImage(smallImage);
+    }
 
     public Color GetRaylibColor()
     {

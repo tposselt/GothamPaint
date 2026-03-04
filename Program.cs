@@ -10,7 +10,13 @@ public class Program
         Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
         Raylib.InitWindow(1200, 900, "Gotham Paint");
         Palettes.LoadIcons();
+        Raylib.InitAudioDevice();
         Raylib.SetTargetFPS(30);
+
+        Image windowIcon = Raylib.LoadImage("assets/images/app_icon.png"); 
+        Sound bgMusic = Raylib.LoadSound("assets/audio/music.ogg");
+        Raylib.SetWindowIcon(windowIcon);
+        Raylib.PlaySound(bgMusic);
 
         int monitor = Raylib.GetCurrentMonitor();
         int monitorWidth = Raylib.GetMonitorWidth(monitor);
@@ -19,17 +25,31 @@ public class Program
         Raylib.SetWindowMaxSize(monitorWidth, monitorHeight);
         Raylib.SetWindowSize(Math.Min(1200, monitorWidth), Math.Min(900, monitorHeight));
 
+        Palettes.Initialize();
+
         using var arena = Clay.CreateArena(Clay.MinMemorySize());
         Clay.Initialize(arena, new Clay_Dimensions(Raylib.GetScreenWidth(), Raylib.GetScreenHeight()), ErrorHandler);
         Clay.SetDebugModeEnabled(false);
 
-        Layout.InitializeText("");
+        Layout.Initialize();
         using Canvas canvas = new(400, 400);
         Layout.ResizeCallback += canvas.ResizeCanvas;
+        Layout.ExportCallback += canvas.ExportToPNG;
         Camera camera = new(canvas.Width, canvas.Height);
+
+        long timeTilLoop = 599514800; // length of the song file
+        long lastTime = DateTime.Now.Ticks;
 
         while (!Raylib.WindowShouldClose())
         {
+            timeTilLoop -= (DateTime.Now.Ticks - lastTime);
+            lastTime = DateTime.Now.Ticks;
+            if (timeTilLoop <= 0)
+            {
+                timeTilLoop = 599514800;
+                Raylib.PlaySound(bgMusic);
+            }
+
             Clay.SetLayoutDimensions(new Clay_Dimensions(Raylib.GetScreenWidth(), Raylib.GetScreenHeight()));
             Clay.SetPointerState(Raylib.GetMousePosition(), Raylib.IsMouseButtonDown(0));
             Clay.UpdateScrollContainers(true, Raylib.GetMouseWheelMoveV(), Raylib.GetFrameTime());
@@ -45,6 +65,7 @@ public class Program
         }
 
         Palettes.UnloadIcons();
+        Raylib.UnloadImage(windowIcon);
         Raylib.CloseWindow();
     }
 

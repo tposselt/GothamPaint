@@ -132,10 +132,11 @@ public static class RaylibClay
                 case Clay_RenderCommandType.CLAY_RENDER_COMMAND_TYPE_IMAGE:
                     {
                         Texture2D texture = *(Texture2D*)renderCommand->renderData.image.imageData;
+                        float minDimension = Math.Min(boundingBox.width / texture.Dimensions.X, boundingBox.height / texture.Dimensions.Y);
                         Raylib.DrawTextureEx(texture,
                             new Vector2(boundingBox.x, boundingBox.y),
                             0,
-                            boundingBox.width / boundingBox.width,
+                            minDimension,
                             Color.White
                         );
                         break;

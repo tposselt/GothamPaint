@@ -8,24 +8,20 @@ public static class SceneController
     {
         camera.Move();
         camera.Begin();
-        if (!Layout.IsResizeCanvasOpen)
-        {
-            canvas.Draw(camera.WorldMousePosition());
-        }
+
+        canvas.canvasLocked = Layout.HoveringGUI;
+        canvas.Draw(camera.WorldMousePosition());
+
         camera.End();
     }
 
     public static void DrawUI()
     {
         Clay.BeginLayout();
+
         Layout.Sidebar();
+
         var commands = Clay.EndLayout();
-
-        if (Raylib.GetKeyPressed() == (int)KeyboardKey.C)
-        {
-            Layout.ToggleResizeCanvas();
-        }
-
         RaylibClay.RenderCommands(commands);
     }
 }
