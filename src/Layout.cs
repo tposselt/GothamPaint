@@ -1,18 +1,13 @@
 using System.Numerics;
 using Clay_cs;
+using Microsoft.VisualBasic;
+using Raylib_cs;
 
 namespace GothamPaint;
 
 public static class Layout
 {
-    public static bool IsResizeCanvasOpen { get; private set; } = false;
-    public delegate void OnResizeCanvas(int width, int height);
-    public static OnResizeCanvas ResizeCallback = delegate { };
-
-    private static Clay_Color BackgroundColor = new(10, 55, 73);
-    private static Clay_Color BackgroundColorLight = new(36, 83, 97);
-
-    public static unsafe void InitializeText(string font)
+        public static unsafe void InitializeText(string font)
     {
         Clay.SetMeasureTextFunction(RaylibClay.MeasureText);
     }
@@ -30,6 +25,66 @@ public static class Layout
             },
         }))
         {
+            using (Clay.Element(Clay.Id("Sidebar"), new()
+            {
+                backgroundColor = new Clay_Color(25, 0, 25),
+                layout = new()
+                {
+                    sizing = new Clay_Sizing(Clay_SizingAxis.Fixed(200), Clay_SizingAxis.Grow()),
+                    padding = Clay_Padding.All(10),
+                    layoutDirection = Clay_LayoutDirection.CLAY_TOP_TO_BOTTOM,
+                    childAlignment = new() { x = Clay_LayoutAlignmentX.CLAY_ALIGN_X_CENTER, y = Clay_LayoutAlignmentY.CLAY_ALIGN_Y_TOP },
+                    childGap = 10,
+                }
+            }))
+            {
+                foreach (Palette palette in Palettes.palettes)
+                {
+                    using (Clay.Element(Clay.Id(palette.name), new()
+                    {
+                        backgroundColor = palette.colors[0],
+                        layout = new()
+                        {
+                            sizing = new Clay_Sizing(
+                                Clay_SizingAxis.Grow(),
+                                Clay_SizingAxis.Fixed(100)),
+                        }
+                    }))
+                    {
+                        var bounds = Clay.GetElementData(Clay.Id(palette.name)).boundingBox;
+
+                        // Draw an image centered inside the palette block
+                        Texture2D icon = palette.icon; // change per palette if needed
+
+                        Rectangle dest = new Rectangle(
+                            bounds.x + 10,
+                            bounds.y + 10,
+                            bounds.width - 20,
+                            bounds.height - 20
+                        );
+
+                        Raylib.DrawTexturePro(
+                            icon,
+                            new Rectangle(0, 0, icon.Width, icon.Height),
+                            dest,
+                            Vector2.Zero,
+                            0,
+                            Color.White
+                        );
+
+                         // Click detection
+                        if (Raylib.IsMouseButtonPressed(MouseButton.Left))
+                        {
+                            Vector2 mouse = Raylib.GetMousePosition();
+                            if (Raylib.CheckCollisionPointRec(mouse, dest))
+                            {
+                                Console.WriteLine($"{palette.name} clicked");
+                            }
+                        }
+                    }
+                }
+            }
+
             using (Clay.Element(Clay.Id("Taskbar"), new()
             {
                 backgroundColor = BackgroundColorLight,
