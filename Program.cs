@@ -12,8 +12,10 @@ public class Program
         Raylib.InitAudioDevice();
         Raylib.SetTargetFPS(30);
 
-        Image windowIcon = Raylib.LoadImage("assets/images/app_icon.png");
+        Image windowIcon = Raylib.LoadImage("assets/images/app_icon.png"); 
+        Music bgMusic = Raylib.LoadMusicStream("assets/audio/music.wav");
         Raylib.SetWindowIcon(windowIcon);
+        Raylib.PlayMusicStream(bgMusic);
 
         int monitor = Raylib.GetCurrentMonitor();
         int monitorWidth = Raylib.GetMonitorWidth(monitor);
@@ -39,6 +41,8 @@ public class Program
             Clay.SetLayoutDimensions(new Clay_Dimensions(Raylib.GetScreenWidth(), Raylib.GetScreenHeight()));
             Clay.SetPointerState(Raylib.GetMousePosition(), Raylib.IsMouseButtonDown(0));
             Clay.UpdateScrollContainers(true, Raylib.GetMouseWheelMoveV(), Raylib.GetFrameTime());
+
+            Raylib.UpdateMusicStream(bgMusic);
 
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Raylib.GetColor(0x11151CFF));
