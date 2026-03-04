@@ -35,13 +35,13 @@ public class Palette(string name, Clay_Color[] colors)
     public readonly string name = name;
     public readonly Clay_Color[] palette = colors;
     public int selectedColor = 0;
-    public readonly Image stampImage = Raylib.LoadImage($"assets/stamps/{name.ToLower()}.png");
+    public readonly Image stampImage = Raylib.LoadImage($"assets/stamps/{name.ToLower().Replace(" ", "")}.png");
     public Texture2D stampIcon;
-    public readonly Sound voiceLine = Raylib.LoadSound($"assets/audio/{name.ToLower()}.wav");
+    public readonly Sound voiceLine = Raylib.LoadSound($"assets/audio/{name.ToLower().Replace(" ", "")}.wav");
 
     public void Initialize()
     {
-        Image smallImage = Raylib.LoadImage($"assets/stamps/{name.ToLower()}.png");
+        Image smallImage = Raylib.LoadImage($"assets/stamps/{name.ToLower().Replace(" ", "")}.png");
         Raylib.ImageResize(ref smallImage, 70, 70);
         stampIcon = Raylib.LoadTextureFromImage(smallImage);
         Raylib.UnloadImage(smallImage);
