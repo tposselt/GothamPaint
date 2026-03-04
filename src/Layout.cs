@@ -186,7 +186,7 @@ public static class Layout
                         }
                     }
 
-                    using (Clay.Element(Clay.Id("stampSpacer"), new()
+                    using (Clay.Element(Clay.Id("StampSpacer"), new()
                     {
                         layout = new()
                         {
